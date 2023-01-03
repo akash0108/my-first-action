@@ -1,21 +1,44 @@
-name: first 
+name: Custom env variables+
 
-on: push
+env:
+  WORKSPACE_ENVIRONMENT_VARIABLE: 'custom workspace environment variable'
+
+on: [push]
 
 jobs:
-  job1:
-    name: first Job
-    runs-on: ubuntu-latest 
+  ubuntu:      
+    env: 
+      JOB_ENVIRONMENT_VARIABLE: 'custom job environment variable for ubuntu'
+    runs-on: ubuntu-latest
     steps:
-      - name: steps
-        uses: actions/checkout@v2
-      - name: Step two
-        run: env | sort
-  job2:
-    name: Second Job
+    - name: Print the custom variables for ubuntu
+      env:
+        STEP_ENVIRONMENT_VARIABLE: 'custom step environment variable for bash'
+      run: 
+        echo "Accessing environment variables in run command"
+        echo "$WORKSPACE_ENVIRONMENT_VARIABLE"
+        echo "$JOB_ENVIRONMENT_VARIABLE"
+        echo "$STEP_ENVIRONMENT_VARIABLE"
+        echo "------------------------------------------------------"
+        echo "Accessing environment variables using env context"
+        echo "${{ env.WORKSPACE_ENVIRONMENT_VARIABLE }}"
+        echo "${{ env.JOB_ENVIRONMENT_VARIABLE }}"
+        echo "${{ env.STEP_ENVIRONMENT_VARIABLE }} Not defined"
+  windows:
+    env:
+      JOB_ENVIRONMENT_VARIABLE: 'custom job environment variable for ubuntu'
     runs-on: windows-latest
     steps: 
-      - name: Step One
-        uses: actions/checkout@v2
-      - name: Step two
-        run: " Get-ChildItem Env: | Sort-Object Name "  
+    - name: Print the Custom variables for the Windows 
+      env: 
+        STEP_ENVIRONMENT_VARIABLE: 'custom step environment variable for windows'
+      run:
+        echo "Accessing environment variables in run command"
+        echo "$Env:WORKSPACE_ENVIRONMENT_VARIABLE"
+        echo "$Env:JOB_ENVIRONMENT_VARIABLE"
+        echo "$Env:STEP_ENVIRONMENT_VARIABLE"
+        echo "------------------------------------------------------"
+        echo "Accessing environment variables using env context"
+        echo "${{ env.WORKSPACE_ENVIRONMENT_VARIABLE }}"
+        echo "${{ env.JOB_ENVIRONMENT_VARIABLE }}"
+        echo "${{ env.STEP_ENVIRONMENT_VARIABLE }} Not defined"
